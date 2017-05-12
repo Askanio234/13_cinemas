@@ -11,6 +11,8 @@ MIN_NUMBER_OF_THEATERS = 10
 
 PROXY = "183.88.185.181:8080"
 
+KINOPOISK = "https://www.kinopoisk.ru/index.php"
+
 def fetch_afisha_page(url):
     request = requests.get(url)
     if request.status_code == 200:
@@ -58,7 +60,7 @@ def add_movie_rating(movies_list):
 
 
 def fetch_kinopoisk_page(movie_title):
-    url = "https://www.kinopoisk.ru/index.php"
+    url = KINOPOISK
     payload = {"first": "yes", "kp_query": movie_title}
     headers = {"User-Agent": "Mozilla/5.0"
     "(Windows NT 10.0; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0"}

@@ -34,4 +34,4 @@ python cinemas.py
 
 # Project Goals
 
-The code is written for educational purposes. Training course for web-developers - [DEVMAN.org](https://devman.org)
+Код написан в образовательных целях. Курс для веб-разработчиков - [DEVMAN.org](https://devman.org)
