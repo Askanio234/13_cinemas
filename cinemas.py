@@ -42,11 +42,11 @@ def get_movie_rating(raw_html):
     movie_ratings = soup.find("span", class_="rating_ball")
     movie_votes = soup.find("span", class_="ratingCount")
     default = 0
-    if movie_ratings is not None:
-        movie_rating = float(movie_ratings.text)
-    else:
+    if movie_ratings is None:
         movie_rating = default
-
+    else:
+        movie_rating = float(movie_ratings.text)
+        
     return movie_rating
 
 
