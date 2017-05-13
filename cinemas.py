@@ -26,7 +26,7 @@ def fetch_page(url, **kwargs):
     headers = None
     for key in kwargs:
         params = kwargs["payload"]
-        headers = kwargs["headers"] 
+        headers = kwargs["headers"]
     request = requests.get(url, params=params, headers=headers)
     return get_raw_html(request)
 
@@ -60,9 +60,16 @@ def add_movie_rating(movies_list):
     for movie in movies_list:
         payload = {"first": "yes", "kp_query": movie}
         movies_info[movie] = (get_movie_rating(
-                            fetch_page(KINOPOISK, payload=payload, headers=HEADERS)))
+                                fetch_page(KINOPOISK,
+                                payload=payload,
+                                headers=HEADERS)))
         time.sleep(random.randrange(5, 10))
     return movies_info
+
+
+def purge_none_ratings(movie_dict):
+    return {key: value for key, value in movie_dict.items()
+            if value is not None}
 
 
 def sort_movies_based_on_rating(movie_dict):
@@ -79,6 +86,7 @@ if __name__ == '__main__':
     movies = parse_afisha_list(fetch_page(AFISHA_SCHEDULE))
     movies_filtered = (filter_movies(movies, MIN_NUMBER_OF_THEATERS))
     movies_rated = add_movie_rating(movies_filtered)
-    movies_sorted = sort_movies_based_on_rating(movies_rated)
+    movies_valid_rating = purge_none_ratings(movies_rated)
+    movies_sorted = sort_movies_based_on_rating(movies_valid_rating)
     output_movies_to_console(movies_sorted)
     
