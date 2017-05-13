@@ -7,7 +7,7 @@ AFISHA_SCHEDULE = "http://www.afisha.ru/msk/schedule_cinema/"
 
 NUMBER_OF_MOVIES = 10
 
-MIN_NUMBER_OF_THEATERS = 80
+MIN_NUMBER_OF_THEATERS = 100
 
 KINOPOISK = "https://www.kinopoisk.ru/index.php"
 
@@ -25,15 +25,25 @@ def get_raw_html(request):
         return request.text
 
 
-def fetch_page(url, parameters=None):
-    if parameters is None:
-        request = requests.get(url)
-        return get_raw_html(request)
-    else:
-        payload = parameters["payload"]
-        headers = parameters["headers"]
-        request = requests.get(url, params=payload, headers=headers)
-        return get_raw_html(request)
+def fetch_page(url, **kwargs):
+    params = None
+    headers = None
+    for key in kwargs:
+        params = kwargs["payload"]
+        headers = kwargs["headers"] 
+    request = requests.get(url, params=params, headers=headers)
+    return get_raw_html(request)
+
+
+# def fetch_page(url, parameters=None):
+#     if parameters is None:
+#         request = requests.get(url)
+#         return get_raw_html(request)
+#     else:
+#         payload = parameters["payload"]
+#         headers = parameters["headers"]
+#         request = requests.get(url, params=payload, headers=headers)
+#         return get_raw_html(request)
 
 
 def parse_afisha_list(raw_html):
@@ -65,7 +75,7 @@ def add_movie_rating(movies_list):
     for movie in movies_list:
         PARAMETERS["payload"]["kp_query"] = movie
         movies_info[movie] = (get_movie_rating(
-                            fetch_page(KINOPOISK, PARAMETERS)))
+                            fetch_page(KINOPOISK, payload=PARAMETERS["payload"], headers=PARAMETERS["headers"])))
         time.sleep(random.randrange(5, 10))
     return movies_info
 
@@ -86,3 +96,4 @@ if __name__ == '__main__':
     movies_rated = add_movie_rating(movies_filtered)
     movies_sorted = sort_movies_based_on_rating(movies_rated)
     output_movies_to_console(movies_sorted)
+    
