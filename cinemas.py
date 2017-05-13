@@ -11,11 +11,7 @@ MIN_NUMBER_OF_THEATERS = 100
 
 KINOPOISK = "https://www.kinopoisk.ru/index.php"
 
-PARAMETERS = dict()
-
-PARAMETERS["payload"] = {"first": "yes", "kp_query": ""}
-
-PARAMETERS["headers"] = {"User-Agent": "Mozilla/5.0"
+HEADERS = {"User-Agent": "Mozilla/5.0"
 "(Windows NT 10.0; WOW64; rv:53.0) Gecko/20100101 Firefox/53.0"}
 
 
@@ -33,17 +29,6 @@ def fetch_page(url, **kwargs):
         headers = kwargs["headers"] 
     request = requests.get(url, params=params, headers=headers)
     return get_raw_html(request)
-
-
-# def fetch_page(url, parameters=None):
-#     if parameters is None:
-#         request = requests.get(url)
-#         return get_raw_html(request)
-#     else:
-#         payload = parameters["payload"]
-#         headers = parameters["headers"]
-#         request = requests.get(url, params=payload, headers=headers)
-#         return get_raw_html(request)
 
 
 def parse_afisha_list(raw_html):
@@ -73,9 +58,9 @@ def get_movie_rating(raw_html):
 def add_movie_rating(movies_list):
     movies_info = dict()
     for movie in movies_list:
-        PARAMETERS["payload"]["kp_query"] = movie
+        payload = {"first": "yes", "kp_query": movie}
         movies_info[movie] = (get_movie_rating(
-                            fetch_page(KINOPOISK, payload=PARAMETERS["payload"], headers=PARAMETERS["headers"])))
+                            fetch_page(KINOPOISK, payload=payload, headers=HEADERS)))
         time.sleep(random.randrange(5, 10))
     return movies_info
 
